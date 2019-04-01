@@ -40,20 +40,30 @@ void *worker2(void *arg)
 int main(int argc, char *argv[])
 {
     // loops = atoi(argv[1]);
+    if(argc!=3)
+	{
+		printf("请正确输入参数！\n");
+		exit(0);
+	}
     int i;
+    printf("初始票数为：%d\n",ticketCount);
     pthread_t p[1000];
     //printf("Initial value : %d\n", counter);
 
     mySem = sem_open("myname", O_CREAT, 0666, 1);
-    for(i=0;i<600;i++)
+    for(i=0;i<atoi(argv[1]);i++)
     {
         pthread_create(&p[i], NULL, worker1, NULL);
     }
-    for(i=600;i<1000;i++)
+    for(i=500;i<atoi(argv[2])+500;i++)
     {
         pthread_create(&p[i], NULL, worker2, NULL);
     }
-    for(i=0;i<1000;i++)
+    for(i=0;i<atoi(argv[1]);i++)
+    {
+        pthread_join(p[i], NULL);
+    }
+    for(i=500;i<atoi(argv[2])+500;i++)
     {
         pthread_join(p[i], NULL);
     }
